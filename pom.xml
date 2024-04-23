@@ -7,7 +7,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.7.17</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>hcmute</groupId>
 	<artifactId>project</artifactId>
@@ -65,7 +65,7 @@
 		<dependency>
 			<groupId>org.sitemesh</groupId>
 			<artifactId>sitemesh</artifactId>
-			<version>3.0.1</version>
+			<version>3.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
