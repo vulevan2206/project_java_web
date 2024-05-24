@@ -32,6 +32,9 @@ import hcmute.model.MilkTeaModel;
 import hcmute.service.IMilkTeaService;
 import hcmute.service.IMilkTeaTypeService;
 import hcmute.service.IStorageService;
+import org.owasp.validator.html.*;
+import hcmute.config.AntiSamyConfig;
+import org.owasp.validator.html.CleanResults;
 
 @Controller
 @RequestMapping("admin/milk-tea")
@@ -60,19 +63,68 @@ public class MilkTeaAdminController {
 		return "admin/customize/customize-milk-tea";
 	}
 
-	@PostMapping("saveOrUpdate")
-	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("milkTea") MilkTeaModel milkTea,
-	        BindingResult result, @RequestParam("imageFile") MultipartFile imageFile) {
-	    if (milkTea != null) {
-	    	MilkTeaEntity entity = new MilkTeaEntity();
-			entity.setIdMilkTea(entity.getIdMilkTea());
-	            
-	            if (milkTea.getName() != null) {
+//	@PostMapping("saveOrUpdate")
+//	public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("milkTea") MilkTeaModel milkTea,
+//	        BindingResult result, @RequestParam("imageFile") MultipartFile imageFile) {
+//	    if (milkTea != null) {
+//	    	MilkTeaEntity entity = new MilkTeaEntity();
+//			entity.setIdMilkTea(entity.getIdMilkTea());
+//	            
+//	            if (milkTea.getName() != null) {
+//	                entity.setName(milkTea.getName());
+//	            }
+//	            entity.setCost(milkTea.getCost());
+//	            if (milkTea.getDescription() != null) {
+//	                entity.setDescription(milkTea.getDescription());
+//	            }
+//	            if (milkTea.getImage() != null) {
+//	                entity.setImage(milkTea.getImage());
+//	            }
+//	            Optional<MilkTeaTypeEntity> opt = milkTeaTypeService.findById(milkTea.getMilkTeaTypeId());
+//	            if (opt.isPresent()) {
+//	                entity.setMilkTeaTypeByMilkTea(opt.get());
+//	            } else {
+//	                // Handle the case where MilkTeaType is not found
+//	                System.out.println("MilkTeaType with ID " + milkTea.getMilkTeaTypeId() + " not found!");
+//	                // You can choose to throw an exception, return an error message, or take other appropriate action
+//	            }
+//	            if (!milkTea.getImageFile().isEmpty()) {
+//	                UUID uuid = UUID.randomUUID();
+//	                String uuString = uuid.toString();
+//	                entity.setImage(storageService.getStorageFilename(milkTea.getImageFile(), uuString));
+//	                storageService.store(milkTea.getImageFile(), entity.getImage());
+//	            }
+//	            milkTeaService.save(entity);
+//	            String message = milkTea.getIsEdit() ? "MilkTea đã được cập nhật thành công"
+//	                    : "MilkTea đã được thêm thành công";
+//	            model.addAttribute("message", message);
+//	    } else {
+//	        model.addAttribute("message", "Không thể lưu MilkTea với dữ liệu null");
+//	    }
+//	    return new ModelAndView("redirect:/admin/milk-tea", model);
+//	}
+	@Autowired
+	 private AntiSamy antiSamy ;
+	 @PostMapping("saveOrUpdate")
+	    public ModelAndView saveOrUpdate(ModelMap model, @Valid @ModelAttribute("milkTea") MilkTeaModel milkTea,BindingResult result, @RequestParam("imageFile") MultipartFile imageFile) {
+	        CleanResults cleanResults = null;;
+	        if (milkTea != null) {
+	            try {
+	                // Làm sạch HTML trước khi lưu vào cơ sở dữ liệu
+	                cleanResults = antiSamy.scan(milkTea.getDescription());
+	                System.out.println("Clean HTML: " + cleanResults.getCleanHTML());
+	                milkTea.setDescription(cleanResults.getCleanHTML());
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	            MilkTeaEntity entity = new MilkTeaEntity();
+	            entity.setIdMilkTea(entity.getIdMilkTea());
+	           if (milkTea.getName() != null) {
 	                entity.setName(milkTea.getName());
 	            }
 	            entity.setCost(milkTea.getCost());
-	            if (milkTea.getDescription() != null) {
-	                entity.setDescription(milkTea.getDescription());
+	            if (cleanResults != null && cleanResults.getCleanHTML() != null) {
+	                entity.setDescription(cleanResults.getCleanHTML());
 	            }
 	            if (milkTea.getImage() != null) {
 	                entity.setImage(milkTea.getImage());
@@ -80,10 +132,7 @@ public class MilkTeaAdminController {
 	            Optional<MilkTeaTypeEntity> opt = milkTeaTypeService.findById(milkTea.getMilkTeaTypeId());
 	            if (opt.isPresent()) {
 	                entity.setMilkTeaTypeByMilkTea(opt.get());
-	            } else {
-	                // Handle the case where MilkTeaType is not found
-	                System.out.println("MilkTeaType with ID " + milkTea.getMilkTeaTypeId() + " not found!");
-	                // You can choose to throw an exception, return an error message, or take other appropriate action
+	            } else {System.out.println("MilkTeaType with ID " + milkTea.getMilkTeaTypeId() + " not found!");
 	            }
 	            if (!milkTea.getImageFile().isEmpty()) {
 	                UUID uuid = UUID.randomUUID();
@@ -92,16 +141,13 @@ public class MilkTeaAdminController {
 	                storageService.store(milkTea.getImageFile(), entity.getImage());
 	            }
 	            milkTeaService.save(entity);
-	            String message = milkTea.getIsEdit() ? "MilkTea đã được cập nhật thành công"
-	                    : "MilkTea đã được thêm thành công";
+	            String message = milkTea.getIsEdit() ? "MilkTea đã được cập nhật thành công": "MilkTea đã được thêm thành công";
 	            model.addAttribute("message", message);
-	    } else {
-	        model.addAttribute("message", "Không thể lưu MilkTea với dữ liệu null");
+	        } else {
+	            model.addAttribute("message", "Không thể lưu MilkTea với dữ liệu null");
+	        }
+	        return new ModelAndView("redirect:/admin/milk-tea", model);
 	    }
-	    return new ModelAndView("redirect:/admin/milk-tea", model);
-	}
-
-
 	@GetMapping("/image/{filename:.+}")
 	public ResponseEntity<Resource> serverFile(@PathVariable String filename) {
 		Resource file = storageService.loadAsResource(filename);
