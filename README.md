@@ -62,7 +62,7 @@
       - Distance Matrix API (Tính phí ship và thời gian ship)
       - Google Maps Platform APIs (Gợi ý địa điểm gần đúng khi tìm kiếm)  
 ## Tài liệu
-- File báo cáo: [Báo cáo đồ án cuối kỳ web](https://docs.google.com/document/d/16XekAK2jCEcMKaYo8waotoBbjcPuryvB/edit?usp=sharing&ouid=107759858224619439962&rtpof=true&sd=true)
+- File báo cáo: [Báo cáo đồ án cuối kỳ web](https://docs.google.com/document/d/1rvcV1ebBAdKZV1HEsryWoF85ZEwXXDcEEXm6TBcDcm0/edit?usp=sharing)
 - File backup database: [projectJavaWeb.bak](https://drive.google.com/file/d/1vwR_-mr2Xb9uLyjfHoQL84ImQnnpbP9k/view?usp=sharing)
 
 ## Cấu trúc dự án
