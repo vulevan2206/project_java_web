@@ -1,18 +1,7 @@
 # Lập trình web
 - Đề tài: **Xây dụng website chuỗi bán trà sữa AloTra bằng SpringBoot + JSP + Bootstrap + JPA + SQLServer**
 - Giáo viên hướng dẫn: ThS. Nguyễn Hữu Trung
-- Sinh viên:
-  - Nguyễn Thái Văn         21110939 (Nhóm trưởng)
-  - Ngô Quang Nghĩa         21110559
-  - Huỳnh Nhật	Nam         21110903
-  - Lê Minh	Kha             21110890
-  - Nguyễn Trung Phiên      21110593
-  - Trần Nguyễn Phương Tây  21110641
-  - Nguyễn Trọng Phúc       21110915
-  - Phan Minh Thuận         21110667
-  - Võ Đức Toàn             21110689
-  - Lê Văn	Vũ              21110943
-
+- 
 ## Tổng quan
 - Technical: **JSP** (**J**akarta **S**erver **P**ages) and **Servlet**
 - Framework: Spring Boot
